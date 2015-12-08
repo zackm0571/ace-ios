@@ -893,6 +893,12 @@ NSMutableString *msgBuffer;
             [self.chatEntries setObject:self.remoteTextBuffer atIndexedSubscript:self.remoteTextBufferIndex];
             [self.tableView reloadData];
             [self showLatestMessage];
+            if(msgBuffer){
+                if (msgBuffer.length == 0)
+                    return;
+                [msgBuffer deleteCharactersInRange:NSMakeRange(msgBuffer.length -1,1)];
+                [self.incomingTextView setText:msgBuffer];
+            }
         }
     }
 }
