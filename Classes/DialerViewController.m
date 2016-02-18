@@ -27,8 +27,8 @@
 #import "PhoneMainView.h"
 #import "Utils.h"
 #import "UILinphone.h"
-
 #include "linphone/linphonecore.h"
+#import "Spark-SDK.h"
 @interface DialerViewController()
 @property NSMutableArray *domains;
 @end
@@ -153,7 +153,6 @@ static UICompositeViewDescription *compositeDescription = nil;
 
 	[addressField setText:@""];
 
-
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_6_0 // attributed string only available since iOS6
 //	if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7) {
 //		// fix placeholder bar color in iOS7
@@ -176,7 +175,12 @@ static UICompositeViewDescription *compositeDescription = nil;
    // [oneButton setBackgroundImage:stretchableImage forState:UIControlStateNormal];
     // the image will be stretched to fill the button, if you resize it.
    // twoButton.imageView.contentMode = UIViewContentModeScaleAspectFill;
-    
+    [[SparkCloud sharedInstance] loginWithUser:@"" password:@"" completion:^(NSError *error) {
+        if (!error)
+            NSLog(@"Logged in to cloud");
+        else
+            NSLog(@"Wrong credentials or no internet connectivity, please try again");
+    }];
     
 }
 

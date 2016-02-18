@@ -25,7 +25,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import <QuartzCore/QuartzCore.h>
 #import <AudioToolbox/AudioServices.h>
-
+#import "Spark-SDK.h"
 @implementation IncomingCallViewController
 
 @synthesize addressLabel;
@@ -64,14 +64,38 @@
     ringLabel.hidden = YES;
     ringCountLabel.text = @"0";
 }
-
+SparkDevice *myPhoton;
+BOOL isBlink;
+BOOL isFinished;
 -(void) toggleBackgroundColor {
     self.view.backgroundColor = [UIColor whiteColor];
+    [[SparkCloud sharedInstance] getDevices:^(NSArray *sparkDevices, NSError *error) {
+        NSLog(@"%@",sparkDevices.description); // print all devices claimed to user
+        
+        for (SparkDevice *device in sparkDevices){
+            myPhoton = device;
+            [self toggleSpark];
+        }
+    }];
+    
     [UIView animateKeyframesWithDuration:0.6 delay:0.0 options:UIViewKeyframeAnimationOptionAutoreverse | UIViewKeyframeAnimationOptionRepeat | UIViewKeyframeAnimationOptionAllowUserInteraction animations:^{
         self.view.backgroundColor = [UIColor redColor];
         self.flashingView.backgroundColor = [UIColor redColor];
     } completion:nil];
     
+}
+-(void) toggleSpark{
+    if(myPhoton){
+        NSNumber *analogWrite = (isBlink) ? @255 : @0;
+        
+        [myPhoton callFunction:@"analogwrite" withArguments:@[@"D0", analogWrite] completion:^(NSNumber *resultCode, NSError *error) {
+            if (!error){
+                NSLog(@"LED on D0 successfully toggled");
+                isBlink = !isBlink;
+                if(!isFinished){ [self performSelector:@selector(toggleSpark) withObject:nil afterDelay:0.6]; }
+            }
+        }];
+    }
 }
 
 -(void) viewDidLoad {
@@ -151,6 +175,7 @@
                                                         userInfo:nil
                                                          repeats:YES];
     [self.vibratorTimer fire];
+    isFinished = FALSE;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -160,6 +185,7 @@
     [self.flashBackgroundColorTimer invalidate];
     [self stopRingCount];
     [super viewWillDisappear:animated];
+    isFinished = YES;
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:kLinphoneCallUpdate
                                                   object:nil];
