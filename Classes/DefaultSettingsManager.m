@@ -10,7 +10,7 @@
 
 #import <UIKit/UIKit.h>
 #import "SRVResolver.h"
-
+#import "RueConfigModel.h"
 #define CONFIG_SETTINGS_URL @"http://cdn.vatrp.net/numbers.json"
 
 @interface DefaultSettingsManager () <SRVResolverDelegate, NSURLConnectionDelegate>
@@ -68,12 +68,17 @@ static DefaultSettingsManager *sharedInstance = nil;
         [self.delegate didFinishLoadingConfigData];
     }
 }
-
+RueConfigModel *model;
 - (void)parseDefaultConfigSettingsFromFile {
-    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"config_defaults" ofType:@"json"];
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"whiteboard_config" ofType:@"json"];
     NSData *content = [[NSData alloc] initWithContentsOfFile:filePath];
-    NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:content options:kNilOptions error:nil];
-    [self storeToUserDefaults:jsonDict];
+    NSError *error = nil;
+    NSDictionary *jsonDict = [NSJSONSerialization JSONObjectWithData:content options:kNilOptions error:&error];
+    NSLog(@"%@", [error description]);
+     model = [[RueConfigModel alloc] initFromNSDictionary:jsonDict];
+    //[self storeToUserDefaults:jsonDict];
+    
+    
 }
 
 
@@ -324,9 +329,10 @@ static DefaultSettingsManager *sharedInstance = nil;
     assert(resolver == self.resolver);
     #pragma unused(resolver)
     assert(result != nil);
-    NSString *configURL = [result objectForKey:@"target"];
-    NSString *configURLPath = [[@"https://" stringByAppendingString:configURL] stringByAppendingString:@"/config/v1/config.json"];
-    [self parseDefaultConfigSettingsFromURL:configURLPath];
+//    NSString *configURL = [result objectForKey:@"target"];
+//    NSString *configURLPath = [[@"https://" stringByAppendingString:configURL] stringByAppendingString:@"/config/v2/config.json"];
+//    [self parseDefaultConfigSettingsFromURL:configURLPath];
+    [self parseDefaultConfigSettingsFromFile];
 }
 
 - (void)srvResolver:(SRVResolver *)resolver didStopWithError:(NSError *)error {

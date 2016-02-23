@@ -1,0 +1,61 @@
+{
+  "version": 2,
+  "config": {
+    "token": "...",
+    "expiration": 86400
+  },
+  "accounts":
+    {
+      "label" : "ACE Test",
+      "sip": {
+        "registrar": {
+          "auth": {
+            "username": "ian_1",
+            "realm": "acetest-registrar.vatrp.net",
+            "password": "password",
+          },
+          "user": "ian_1",
+          "domain": "acetest-registrar.vatrp.net",
+          "port": 25061,
+          "tags": {
+            "transport": "tls"
+          },
+          "outbound_proxy": false
+        },
+        "outbound_proxy": {
+          "auth": {
+            "username": "ian_1",
+            "realm": "acetest-outboundproxy.vatrp.net",
+            "password": "password",
+          },
+          "domain": "acetest-outboundproxy.vatrp.net",
+          "port": 25061,
+          "tags": {
+            "transport": "tls"
+          }
+        }
+      },
+      "ice": {
+        "servers": [
+          {
+            "url": "stun:stun.l.google.com:19302"
+          },
+          {
+            "url": "turn:acetest-coturn.vatrp.net:3478?transport=udp",
+            "username": "28224511:1379330808",
+            "credential": "JZEOEt2V3Qb0y27GRntt2u2PAYA="
+          }
+        ]
+      
+      },
+      "media": {
+        "codecs": {
+          "audio": [ "G.722", "PCMU", "PCMA" ],
+          "video": [ "H.264", "H.263", "VP8" ]
+        }
+      }
+    },
+  "preferences": []
+}
+ 
+ 
