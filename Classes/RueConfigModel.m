@@ -109,25 +109,25 @@ const NSString *MEDIA_CODECS_VIDEO_KEY=@"video";
 
     //Version
     value = ([[dict allKeys] containsObject:VERSION_KEY]) ? [dict objectForKey:VERSION_KEY] : nil;
-    if(value){ [self setVersion:(NSNumber*)value]; }
+    [self setVersion:(NSNumber*)value];
 
     //Config (token, expiry)
     NSDictionary *configDict =([[dict allKeys] containsObject:CONFIG_DICT_KEY]) ? [dict objectForKey:CONFIG_DICT_KEY] : nil;
     if(configDict){
         //Token
         value =([[configDict allKeys] containsObject:CONFIG_TOKEN_KEY]) ? [configDict objectForKey:CONFIG_TOKEN_KEY] : nil;
-        if(value){ [self setConfigToken:value]; }
+        [self setConfigToken:value];
      
         //Expiration
         value =([[configDict allKeys] containsObject:CONFIG_EXPIRATION_KEY]) ? [configDict objectForKey:CONFIG_EXPIRATION_KEY] : nil;
-        if(value){ [self setConfigExpiration:(NSNumber*)value]; }
+        [self setConfigExpiration:(NSNumber*)value];
     }
     
     //Accounts
     NSDictionary *accountDict = ([[dict allKeys] containsObject:ACCOUNT_DICT_KEY]) ? [dict objectForKey:ACCOUNT_DICT_KEY] : nil;
     if(accountDict){ //Account Label
         value =([[accountDict allKeys] containsObject:ACCOUNT_LABEL_KEY]) ? [accountDict objectForKey:ACCOUNT_LABEL_KEY] : nil;
-        if(value){ [self setAccountLabel:(NSString*)value]; };
+        [self setAccountLabel:(NSString*)value];
         
         /****** SIP *******/
         NSDictionary *sipDict = ([[accountDict allKeys] containsObject:ACCOUNT_SIP_DICT_KEY]) ? [accountDict objectForKey:ACCOUNT_SIP_DICT_KEY] : nil;
@@ -220,6 +220,7 @@ const NSString *MEDIA_CODECS_VIDEO_KEY=@"video";
 //todo: add defaults and linphone core settings
 #pragma mark Setters
 -(void)setVersion:(NSNumber*)version{
+    if(!version){ version = @2; }
     NSString *key = [self constructPersistenceKeyFromPathKeys:@[VERSION_KEY]];
     [[self getDefaults] setObject:version forKey:key];
     [[self getDefaults] synchronize];
@@ -227,12 +228,14 @@ const NSString *MEDIA_CODECS_VIDEO_KEY=@"video";
 }
 
 -(void)setConfigToken:(NSObject*)token{
+    if(!token){ token = @""; };
     NSString *key = [self constructPersistenceKeyFromPathKeys:@[CONFIG_DICT_KEY, CONFIG_TOKEN_KEY]];
     [[self getDefaults] setObject:token forKey:key];
     [[self getDefaults] synchronize];
     NSLog(@"%@:%@", key, token);
 }
 -(void)setConfigExpiration:(NSNumber*)expiration{
+    if(!expiration){ expiration = @280; }
     NSString *key = [self constructPersistenceKeyFromPathKeys:@[CONFIG_DICT_KEY, CONFIG_EXPIRATION_KEY]];
     [[self getDefaults] setObject:expiration forKey:key];
     [[self getDefaults] synchronize];
@@ -240,6 +243,7 @@ const NSString *MEDIA_CODECS_VIDEO_KEY=@"video";
 }
 
 -(void)setAccountLabel:(NSString*)label{
+    if(!label){ label = @""; };
     NSString *key = [self constructPersistenceKeyFromPathKeys:@[ACCOUNT_DICT_KEY, ACCOUNT_LABEL_KEY]];
     [[self getDefaults] setObject:label forKey:key];
     [[self getDefaults] synchronize];
@@ -247,6 +251,7 @@ const NSString *MEDIA_CODECS_VIDEO_KEY=@"video";
 }
 
 -(void)setAccountSipRegistrarAuthUsername:(NSString*)authUsername{
+    if(!authUsername){ authUsername = @""; };
     NSString *key = [self constructPersistenceKeyFromPathKeys:@[ACCOUNT_DICT_KEY, ACCOUNT_SIP_DICT_KEY,
                                                                 ACCOUNT_SIP_REGISTRAR_DICT_KEY,
                                                                 ACCOUNT_SIP_REGISTRAR_AUTH_DICT_KEY,
@@ -256,6 +261,7 @@ const NSString *MEDIA_CODECS_VIDEO_KEY=@"video";
     NSLog(@"%@:%@", key, authUsername);
 }
 -(void)setAccountSipRegistrarAuthRealm:(NSString*)realm{
+    if(!realm){ realm = @""; };
     NSString *key = [self constructPersistenceKeyFromPathKeys:@[ACCOUNT_DICT_KEY, ACCOUNT_SIP_DICT_KEY,
                                                                 ACCOUNT_SIP_REGISTRAR_DICT_KEY,
                                                                 ACCOUNT_SIP_REGISTRAR_AUTH_DICT_KEY,
@@ -265,6 +271,7 @@ const NSString *MEDIA_CODECS_VIDEO_KEY=@"video";
     NSLog(@"%@:%@", key, realm);
 }
 -(void)setAccountSipRegistrarAuthPassword:(NSString*)password{
+    if(!password){ password = @""; };
     NSString *key = [self constructPersistenceKeyFromPathKeys:@[ACCOUNT_DICT_KEY, ACCOUNT_SIP_DICT_KEY,
                                                                 ACCOUNT_SIP_REGISTRAR_DICT_KEY,
                                                                 ACCOUNT_SIP_REGISTRAR_AUTH_DICT_KEY,
@@ -275,6 +282,7 @@ const NSString *MEDIA_CODECS_VIDEO_KEY=@"video";
 }
 
 -(void)setAccountSipRegistrarUser:(NSString*)user{
+    if(!user){ user = @""; };
     NSString *key = [self constructPersistenceKeyFromPathKeys:@[ACCOUNT_DICT_KEY, ACCOUNT_SIP_DICT_KEY,
                                                                 ACCOUNT_SIP_REGISTRAR_DICT_KEY,
                                                                 ACCOUNT_SIP_REGISTRAR_USER_KEY]];
@@ -283,6 +291,7 @@ const NSString *MEDIA_CODECS_VIDEO_KEY=@"video";
     NSLog(@"%@:%@", key, user);
 }
 -(void)setAccountSipRegistrarDomain:(NSString*)domain{
+    if(!domain){ domain = @""; };
     NSString *key = [self constructPersistenceKeyFromPathKeys:@[ACCOUNT_DICT_KEY, ACCOUNT_SIP_DICT_KEY,
                                                                 ACCOUNT_SIP_REGISTRAR_DICT_KEY,
                                                                 ACCOUNT_SIP_REGISTRAR_DOMAIN_KEY]];
@@ -291,6 +300,7 @@ const NSString *MEDIA_CODECS_VIDEO_KEY=@"video";
     NSLog(@"%@:%@", key, domain);
 }
 -(void)setAccountSipRegistrarPort:(NSNumber*)port{
+    if(!port){ port = @5060; };
     NSString *key = [self constructPersistenceKeyFromPathKeys:@[ACCOUNT_DICT_KEY, ACCOUNT_SIP_DICT_KEY,
                                                                 ACCOUNT_SIP_REGISTRAR_DICT_KEY,
                                                                 ACCOUNT_SIP_REGISTRAR_PORT_KEY]];
@@ -300,6 +310,7 @@ const NSString *MEDIA_CODECS_VIDEO_KEY=@"video";
 }
 
 -(void)setAccountSipRegistrarTagsTransport:(NSString *)transport{
+    if(!transport){ transport = @"tcp"; };
     NSString *key = [self constructPersistenceKeyFromPathKeys:@[ACCOUNT_DICT_KEY, ACCOUNT_SIP_DICT_KEY,
                                                                 ACCOUNT_SIP_REGISTRAR_DICT_KEY,
                                                                 ACCOUNT_SIP_REGISTRAR_TAGS_DICT,
@@ -320,6 +331,7 @@ const NSString *MEDIA_CODECS_VIDEO_KEY=@"video";
 }
 
 -(void)setAccountSipOutboundProxyAuthUsername:(NSString*)authUsername{
+    if(!authUsername) authUsername = @"";
     NSString *key = [self constructPersistenceKeyFromPathKeys:@[ACCOUNT_DICT_KEY, ACCOUNT_SIP_DICT_KEY,
                                                                 ACCOUNT_SIP_OUTBOUND_PROXY_DICT_KEY,
                                                                 ACCOUNT_SIP_OUTBOUND_PROXY_AUTH_DICT_KEY,
@@ -329,6 +341,7 @@ const NSString *MEDIA_CODECS_VIDEO_KEY=@"video";
     NSLog(@"%@:%@", key, authUsername);
 }
 -(void)setAccountSipOutboundProxyAuthRealm:(NSString*)realm{
+    if(!realm) realm = @"";
     NSString *key = [self constructPersistenceKeyFromPathKeys:@[ACCOUNT_DICT_KEY, ACCOUNT_SIP_DICT_KEY,
                                                                 ACCOUNT_SIP_OUTBOUND_PROXY_DICT_KEY,
                                                                 ACCOUNT_SIP_OUTBOUND_PROXY_AUTH_DICT_KEY,
@@ -339,6 +352,7 @@ const NSString *MEDIA_CODECS_VIDEO_KEY=@"video";
     
 }
 -(void)setAccountSipOutboundProxyAuthPassword:(NSString*)password{
+    if(!password) password = @"";
     NSString *key = [self constructPersistenceKeyFromPathKeys:@[ACCOUNT_DICT_KEY, ACCOUNT_SIP_DICT_KEY,
                                                                 ACCOUNT_SIP_OUTBOUND_PROXY_DICT_KEY,
                                                                 ACCOUNT_SIP_OUTBOUND_PROXY_AUTH_DICT_KEY,
@@ -350,6 +364,7 @@ const NSString *MEDIA_CODECS_VIDEO_KEY=@"video";
 }
 
 -(void)setAccountSipOutboundProxyDomain:(NSString*)domain{
+    if(!domain) domain = @"";
     NSString *key = [self constructPersistenceKeyFromPathKeys:@[ACCOUNT_DICT_KEY, ACCOUNT_SIP_DICT_KEY,
                                                                 ACCOUNT_SIP_OUTBOUND_PROXY_DICT_KEY,
                                                                 ACCOUNT_SIP_OUTBOUND_PROXY_DOMAIN_KEY]];
@@ -358,6 +373,7 @@ const NSString *MEDIA_CODECS_VIDEO_KEY=@"video";
     NSLog(@"%@:%@", key, domain);
 }
 -(void)setAccountSipOutboundProxyPort:(NSNumber*)port{
+    if(!port) port = @5060;
     NSString *key = [self constructPersistenceKeyFromPathKeys:@[ACCOUNT_DICT_KEY, ACCOUNT_SIP_DICT_KEY,
                                                                 ACCOUNT_SIP_OUTBOUND_PROXY_DICT_KEY,
                                                                 ACCOUNT_SIP_OUTBOUND_PROXY_PORT_KEY]];
@@ -366,6 +382,7 @@ const NSString *MEDIA_CODECS_VIDEO_KEY=@"video";
     NSLog(@"%@:%@", key, port);
 }
 -(void)setAccountSipOutboundProxyTagsTransport:(NSString*)transport{
+    if(!transport) transport = @"tcp";
     NSString *key = [self constructPersistenceKeyFromPathKeys:@[ACCOUNT_DICT_KEY, ACCOUNT_SIP_DICT_KEY,
                                                                 ACCOUNT_SIP_OUTBOUND_PROXY_DICT_KEY,
                                                                 ACCOUNT_SIP_OUTBOUND_PROXY_TAGS_DICT_KEY,
@@ -376,6 +393,7 @@ const NSString *MEDIA_CODECS_VIDEO_KEY=@"video";
 }
 
 -(void)setAccountICEStunServerURL:(NSString*)url{
+    if(!url) url = @"";
     NSString *key = [self constructPersistenceKeyFromPathKeys:@[ACCOUNT_DICT_KEY, ACCOUNT_ICE_DICT_KEY,
                                                                 ACCOUNT_ICE_SERVERS_DICT_KEY, @"stun",ACCOUNT_ICE_STUN_SERVER_URL_KEY]];
     [[self getDefaults] setObject:url forKey:key];
@@ -384,6 +402,7 @@ const NSString *MEDIA_CODECS_VIDEO_KEY=@"video";
     
 }
 -(void)setAccountICETurnServerURL:(NSString*)url{
+    if(!url) url = @"";
     NSString *key = [self constructPersistenceKeyFromPathKeys:@[ACCOUNT_DICT_KEY, ACCOUNT_ICE_DICT_KEY,
                                                                 ACCOUNT_ICE_SERVERS_DICT_KEY, @"turn",ACCOUNT_ICE_TURN_SERVER_URL_KEY]];
                      [[self getDefaults] setObject:url forKey:key];
@@ -392,6 +411,7 @@ const NSString *MEDIA_CODECS_VIDEO_KEY=@"video";
     
 }
 -(void)setAccountICETurnServerUsername:(NSString*)username{
+    if(!username) username = @"";
     NSString *key = [self constructPersistenceKeyFromPathKeys:@[ACCOUNT_DICT_KEY, ACCOUNT_ICE_DICT_KEY,
                                                                 ACCOUNT_ICE_SERVERS_DICT_KEY, @"turn",ACCOUNT_ICE_TURN_SERVER_USERNAME_KEY]];
     [[self getDefaults] setObject:username forKey:key];
@@ -400,6 +420,7 @@ const NSString *MEDIA_CODECS_VIDEO_KEY=@"video";
     
 }
 -(void)setAccountICETurnServerCredential:(NSString*)credential{
+    if(!credential) credential = @"";
     NSString *key = [self constructPersistenceKeyFromPathKeys:@[ACCOUNT_DICT_KEY, ACCOUNT_ICE_DICT_KEY,
                                                                 ACCOUNT_ICE_SERVERS_DICT_KEY, @"turn",ACCOUNT_ICE_TURN_SERVER_CREDENTIAL_KEY]];
     [[self getDefaults] setObject:credential forKey:key];
@@ -408,6 +429,7 @@ const NSString *MEDIA_CODECS_VIDEO_KEY=@"video";
 }
 
 -(void)setMediaCodecsAudio:(NSArray*)codecs{
+    if(!codecs) codecs = @[@"G.722", @"PCMU", @"PCMA"];
     NSString *key = [self constructPersistenceKeyFromPathKeys:@[ACCOUNT_DICT_KEY, MEDIA_DICT_KEY,
                                                                 MEDIA_CODECS_DICT_KEY, MEDIA_CODECS_AUDIO_KEY]];
     [[self getDefaults] setObject:codecs forKey:key];
@@ -416,6 +438,7 @@ const NSString *MEDIA_CODECS_VIDEO_KEY=@"video";
     
 }
 -(void)setMediaCodecsVideo:(NSArray*)codecs{
+    if(!codecs) codecs = @[@"H.264", @"H.263", @"VP8"];
     NSString *key = [self constructPersistenceKeyFromPathKeys:@[ACCOUNT_DICT_KEY, MEDIA_DICT_KEY,
                                                                 MEDIA_CODECS_DICT_KEY, MEDIA_CODECS_VIDEO_KEY]];
     [[self getDefaults] setObject:codecs forKey:key];
