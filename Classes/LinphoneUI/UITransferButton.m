@@ -66,7 +66,7 @@
         displayName = address;
     }
 
-    [[LinphoneManager instance] call:address displayName:displayName transfer:TRUE];
+    [[LinphoneManager instance] call:address displayName:displayName :linphone_core_get_default_proxy_config([LinphoneManager getLc]) transfer:TRUE];
 }
 
 @end

@@ -32,7 +32,7 @@
 	if ([self voiceMailEnabled]) {
 		LinphoneManager *lm = [LinphoneManager instance];
 		[lm call:[lm lpConfigStringForKey:@"voice_mail_uri"]
-			displayName:NSLocalizedString(@"Voice mail", nil)
+     displayName:NSLocalizedString(@"Voice mail", nil):linphone_core_get_default_proxy_config([LinphoneManager getLc])
 			   transfer:FALSE];
 	}
 }

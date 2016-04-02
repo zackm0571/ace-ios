@@ -68,7 +68,7 @@ const NSString *cdnDatabase = @"http://cdn.vatrp.net/numbers.json";
         const LinphoneAddress *addr = linphone_proxy_config_normalize_sip_uri(linphone_core_get_default_proxy_config([LinphoneManager getLc]), [resourceNum UTF8String]);
         NSString *sip_uri =[[NSString alloc] initWithUTF8String: linphone_address_as_string_uri_only(addr)];
         sip_uri = [NSString stringWithFormat:@"%@;user=phone", sip_uri];
-        [[LinphoneManager instance] call:sip_uri displayName:resourceName transfer:0];
+        [[LinphoneManager instance] call:sip_uri displayName:resourceName :linphone_core_get_default_proxy_config([LinphoneManager getLc]) transfer:0];
     }
 }
 

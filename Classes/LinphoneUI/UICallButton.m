@@ -21,7 +21,7 @@
 #import "LinphoneManager.h"
 #import "SDPNegotiationService.h"
 #import <CoreTelephony/CTCallCenter.h>
-
+#include "PhoneMainView.h"
 @implementation UICallButton
 
 @synthesize addressField;
@@ -106,7 +106,50 @@
 		if (contact) {
 			displayName = [FastAddressBook getContactDisplayName:contact];
 		}
-		[[LinphoneManager instance] call:address displayName:displayName transfer:FALSE];
+        const MSList *proxyCgs = linphone_core_get_proxy_config_list([LinphoneManager getLc]);
+        if(ms_list_size(proxyCgs) == 1){
+            [[LinphoneManager instance] call:address displayName:displayName :linphone_core_get_default_proxy_config([LinphoneManager getLc]) transfer:0];
+        }
+        else{
+            UIAlertController* alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Available in General Release",nil)
+                                                                           message:@"Choose account to place call from."
+                                                                    preferredStyle:UIAlertControllerStyleAlert];
+            // alert.view.tintColor = LINPHONE_MAIN_COLOR;
+            
+            if (proxyCgs) {
+                for (int i = 0; i < ms_list_size(proxyCgs); i++) {
+                    LinphoneProxyConfig *cfg = ms_list_nth_data(proxyCgs, i);
+                    NSString *addr = [[NSString alloc] initWithUTF8String:linphone_proxy_config_get_identity(cfg)];
+                    UIAlertAction* providerAction = [UIAlertAction actionWithTitle:addr
+                                                                             style:UIAlertActionStyleDefault
+                                                                           handler:^(UIAlertAction * action) {
+                                                       linphone_core_set_default_proxy_config([LinphoneManager getLc], cfg);
+                                                       [[LinphoneManager instance] call:address displayName:displayName :cfg transfer:0];
+                                                   }];
+                    [providerAction setEnabled:YES];
+                    [alert addAction:providerAction];
+                    [alert.view setBackgroundColor:[UIColor blackColor]];
+                    [alert setModalPresentationStyle:UIModalPresentationPopover];
+                    
+                    UIPopoverPresentationController *popPresenter = [alert popoverPresentationController];
+                    UIButton *button = self;
+                    popPresenter.sourceView = button;
+                    popPresenter.sourceRect = button.bounds;
+                    
+                }
+            }
+//            UIAlertAction* none = [UIAlertAction actionWithTitle:NSLocalizedString(@"Leave empty", nil)
+//                                                           style:UIAlertActionStyleDefault
+//                                                         handler:^(UIAlertAction * action) {
+//                                                             self.sipDomainLabel.text = @"";
+//                                                             self.addressField.sipDomain = nil;
+//                                                             self.providerImageView.image = nil;
+//                                                         }];
+//            [alert addAction:none];
+            [[PhoneMainView instance] presentViewController:alert animated:YES completion:nil];
+        }
+
+		//[[LinphoneManager instance] call:address displayName:displayName transfer:FALSE];
 	}
 }
 

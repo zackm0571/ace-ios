@@ -466,7 +466,49 @@ static UICompositeViewDescription *compositeDescription = nil;
 }
 
 - (void)call:(NSString *)address displayName:(NSString *)displayName {
-	[[LinphoneManager instance] call:address displayName:displayName transfer:transferMode];
+    const MSList *proxyCgs = linphone_core_get_proxy_config_list([LinphoneManager getLc]);
+    if(ms_list_size(proxyCgs) == 1){
+        [[LinphoneManager instance] call:address displayName:displayName :linphone_core_get_default_proxy_config([LinphoneManager getLc]) transfer:transferMode];
+    }
+    else{
+        UIAlertController* alert = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"Available in General Release",nil)
+                                                                       message:@"Choose account to place call from."
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        // alert.view.tintColor = LINPHONE_MAIN_COLOR;
+        
+        if (proxyCgs) {
+            for (int i = 0; i < ms_list_size(proxyCgs); i++) {
+                LinphoneProxyConfig *cfg = ms_list_nth_data(proxyCgs, i);
+                NSString *addr = [[NSString alloc] initWithUTF8String:linphone_proxy_config_get_identity(cfg)];
+                UIAlertAction* providerAction = [UIAlertAction actionWithTitle:addr
+                                                                         style:UIAlertActionStyleDefault
+                                                                       handler:^(UIAlertAction * action) {
+                                                                           [[LinphoneManager instance] call:address displayName:displayName :cfg transfer:transferMode];
+                                                                       }];
+                [providerAction setEnabled:YES];
+                [alert addAction:providerAction];
+                [alert.view setBackgroundColor:[UIColor blackColor]];
+                [alert setModalPresentationStyle:UIModalPresentationPopover];
+                
+                UIPopoverPresentationController *popPresenter = [alert popoverPresentationController];
+                UIButton *button = self.callButton;
+                popPresenter.sourceView = button;
+                popPresenter.sourceRect = button.bounds;
+                
+            }
+        }
+        UIAlertAction* none = [UIAlertAction actionWithTitle:NSLocalizedString(@"Leave empty", nil)
+                                                       style:UIAlertActionStyleDefault
+                                                     handler:^(UIAlertAction * action) {
+                                                         self.sipDomainLabel.text = @"";
+                                                         self.addressField.sipDomain = nil;
+                                                         self.providerImageView.image = nil;
+                                                     }];
+        [alert addAction:none];
+        [self presentViewController:alert animated:YES completion:nil];
+    }
+
+	
 }
 
 

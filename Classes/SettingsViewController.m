@@ -16,7 +16,7 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
-
+#import "AddProviderLoginViewController.h"
 #import "SettingsViewController.h"
 #import "LinphoneManager.h"
 #import "PhoneMainView.h"
@@ -1183,7 +1183,11 @@ static BOOL isAdvancedSettings = FALSE;
 							}];
 		[alert show];
 
-	} else if ([key isEqual:@"about_button"]) {
+	}
+    else if([key isEqual:@"add_account"]){
+        [self presentViewController:[[AddProviderLoginViewController alloc] init] animated:YES completion:nil];
+    }
+    else if ([key isEqual:@"about_button"]) {
 		[[PhoneMainView instance] changeCurrentView:[AboutViewController compositeViewDescription] push:TRUE];
 	}
     else if([key isEqualToString:@"view_tss_button"]){

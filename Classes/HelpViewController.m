@@ -93,7 +93,7 @@
     else if([[tableData objectAtIndex:indexPath.row] rangeOfString:@"Videomail"].location != NSNotFound){
         NSString *address = [[NSUserDefaults standardUserDefaults] objectForKey:@"video_mail_uri_preference"];
         if(address){
-            [[LinphoneManager instance] call:address displayName:@"Videomail" transfer:FALSE];
+            [[LinphoneManager instance] call:address displayName:@"Videomail" :linphone_core_get_default_proxy_config([LinphoneManager getLc]) transfer:FALSE];
             [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:@"mwi_count"];
         }
     }

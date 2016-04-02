@@ -68,6 +68,14 @@
 		</dict>
 		<dict>
 			<key>Key</key>
+			<string>add_account</string>
+			<key>Title</key>
+			<string>Add account</string>
+			<key>Type</key>
+			<string>IASKButtonSpecifier</string>
+		</dict>
+		<dict>
+			<key>Key</key>
 			<string>wizard_button</string>
 			<key>Title</key>
 			<string>Logout</string>

@@ -170,7 +170,7 @@ typedef struct _LinphoneManagerSounds {
 - (void)acceptCall:(LinphoneCall *)call;
 - (void)declineCall:(LinphoneCall *)call;
 - (void)resumeCall:(LinphoneCall *)call;
-- (void)call:(NSString *)address displayName:(NSString*)displayName transfer:(BOOL)transfer;
+- (void)call:(NSString *)address displayName:(NSString*)displayName :(LinphoneProxyConfig*)cfg transfer:(BOOL)transfer;
 
 /**
  *  Terminates current call

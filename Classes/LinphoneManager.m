@@ -1094,7 +1094,6 @@ static void linphone_info_received (LinphoneCore *lc, LinphoneCall *call, const 
     }
 }
 
-
 #pragma mark - Message composition start
 
 - (void)onMessageComposeReceived:(LinphoneCore *)core forRoom:(LinphoneChatRoom *)room {
@@ -2027,12 +2026,12 @@ static void audioRouteChangeListenerCallback(void *inUserData,					  // 1
     linphone_core_terminate_call(theLinphoneCore, call);
 }
 
-- (void)call:(NSString *)address displayName:(NSString *)displayName transfer:(BOOL)transfer {
+- (void)call:(NSString *)address displayName:(NSString *)displayName :(LinphoneProxyConfig*)cfg transfer:(BOOL)transfer {
     
     NSString *addressWithoutEmptyStrings = [address stringByReplacingOccurrencesOfString:@" " withString:@""];
     NSString *phoneNumber = [LinphoneUtils phoneNumberFromURI:addressWithoutEmptyStrings];
     if ([LinphoneUtils isInternationalPhoneNumber:phoneNumber]) {
-        LinphoneProxyConfig *proxyConfig = linphone_core_get_default_proxy_config([LinphoneManager getLc]);
+        LinphoneProxyConfig *proxyConfig = cfg;
         const char *domain = linphone_proxy_config_get_domain(proxyConfig);
         address = [NSString stringWithFormat:@"sip:%@@%s;user=phone", phoneNumber, domain];
     }
